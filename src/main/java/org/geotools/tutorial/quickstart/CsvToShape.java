@@ -67,10 +67,10 @@ public class CsvToShape {
             while ((line = reader.readLine()) != null) {
                 if (line.trim().length() > 0) {
                     String[] cells = line.split(",");
-                    double latitude = Double.parseDouble(cells[0]);
-                    double longitude = Double.parseDouble(cells[1]);
-                    String name = cells[2];
-                    int number = Integer.parseInt(cells[3]);
+                    double latitude = Double.parseDouble(cells[0].trim());
+                    double longitude = Double.parseDouble(cells[1].trim());
+                    String name = cells[2].trim();
+                    int number = Integer.parseInt(cells[3].trim());
 
                     Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
 
