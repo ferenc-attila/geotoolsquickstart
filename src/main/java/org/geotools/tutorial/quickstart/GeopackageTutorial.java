@@ -3,8 +3,13 @@ package org.geotools.tutorial.quickstart;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.data.simple.SimpleFeatureReader;
 import org.geotools.data.simple.SimpleFeatureSource;
+import org.opengis.feature.GeometryAttribute;
+import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.AttributeType;
+import org.opengis.geometry.Geometry;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,16 +41,24 @@ public class GeopackageTutorial {
             for (AttributeType actual : fields) {
                 fieldNames.add(actual.getName().toString());
             }
-
             featureCollection = featureSource.getFeatures();
         } catch (IOException ioe) {
             throw new IllegalStateException("Cannot read datastore: " + geopackageParameters.get("database") + "!");
         }
-//
-//        while (featureCollection.features().hasNext()) {
-//            SimpleFeature feature = featureCollection.features().next();
-//            System.out.println(feature.toString());
-//            System.out.println(feature.getDefaultGeometry().toString());
-//        }
+
+        SimpleFeatureIterator iterator = featureCollection.features();
+
+        while(iterator.hasNext()) {
+            SimpleFeature feature = iterator.next();
+            String geometryString = feature.getDefaultGeometry().toString().replace("(", "").replace(")", "");
+            String[] geometry = geometryString.split(" ");
+            Location actual = new Location(
+                    Long.parseLong(feature.getID().substring(feature.getID().indexOf('.') + 1)),
+                    Double.parseDouble(geometry[1]),
+                    Double.parseDouble(geometry[2]),
+                    feature.getAttribute("name").toString(),
+                    Integer.parseInt(feature.getAttribute("number").toString())
+            );
+        }
     }
 }
