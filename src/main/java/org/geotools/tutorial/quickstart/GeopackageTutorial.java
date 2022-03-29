@@ -3,13 +3,8 @@ package org.geotools.tutorial.quickstart;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.data.simple.SimpleFeatureReader;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.geopkg.GeoPackage;
-import org.geotools.geopkg.GeoPkgDataStoreFactory;
-import org.geotools.geopkg.mosaic.GeoPackageReader;
 import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,6 +24,9 @@ public class GeopackageTutorial {
 
         try {
             dataStore = DataStoreFinder.getDataStore(geopackageParameters);
+            if (dataStore == null) {
+                throw new IllegalStateException("Couldn't connect! Check parameters!");
+            }
             featureSource = dataStore.getFeatureSource("locations");
             featureCollection = featureSource.getFeatures();
         } catch (IOException ioe) {
